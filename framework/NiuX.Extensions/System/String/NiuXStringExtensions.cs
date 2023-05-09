@@ -1,24 +1,23 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
 using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using JetBrains.Annotations;
-using Volo.Abp;
+using NiuX;
 
+// ReSharper disable CheckNamespace
 namespace System;
 
-/// <summary>
-/// Extension methods for String class.
-/// </summary>
-public static class AbpStringExtensions
+public static partial class NiuXStringExtensions
 {
     /// <summary>
     /// Adds a char to end of given string if it does not ends with the char.
     /// </summary>
-    public static string EnsureEndsWith(this string str, char c, StringComparison comparisonType = StringComparison.Ordinal)
+    public static string EnsureEndsWith(this string str, char c,
+        StringComparison comparisonType = StringComparison.Ordinal)
     {
-        Check.NotNull(str, nameof(str));
+        Checker.NotNull(str, nameof(str));
 
         if (str.EndsWith(c.ToString(), comparisonType))
         {
@@ -31,9 +30,10 @@ public static class AbpStringExtensions
     /// <summary>
     /// Adds a char to beginning of given string if it does not starts with the char.
     /// </summary>
-    public static string EnsureStartsWith(this string str, char c, StringComparison comparisonType = StringComparison.Ordinal)
+    public static string EnsureStartsWith(this string str, char c,
+        StringComparison comparisonType = StringComparison.Ordinal)
     {
-        Check.NotNull(str, nameof(str));
+        Checker.NotNull(str, nameof(str));
 
         if (str.StartsWith(c.ToString(), comparisonType))
         {
@@ -44,10 +44,28 @@ public static class AbpStringExtensions
     }
 
     /// <summary>
+    /// Converts given string to a byte array using <see cref="Encoding.UTF8"/> encoding.
+    /// </summary>
+    public static byte[] GetBytes(this string str)
+    {
+        return str.GetBytes(Encoding.UTF8);
+    }
+
+    /// <summary>
+    /// Converts given string to a byte array using the given <paramref name="encoding"/>
+    /// </summary>
+    public static byte[] GetBytes([NotNull] this string str, [NotNull] Encoding encoding)
+    {
+        Checker.NotNull(str, nameof(str));
+        Checker.NotNull(encoding, nameof(encoding));
+
+        return encoding.GetBytes(str);
+    }
+
+    /// <summary>
     /// Indicates whether this string is null or an System.String.Empty string.
     /// </summary>
-    [ContractAnnotation("str:null => true")]
-    public static bool IsNullOrEmpty(this string str)
+    public static bool IsNullOrEmpty(this string? str)
     {
         return string.IsNullOrEmpty(str);
     }
@@ -55,8 +73,7 @@ public static class AbpStringExtensions
     /// <summary>
     /// indicates whether this string is null, empty, or consists only of white-space characters.
     /// </summary>
-    [ContractAnnotation("str:null => true")]
-    public static bool IsNullOrWhiteSpace(this string str)
+    public static bool IsNullOrWhiteSpace(this string? str)
     {
         return string.IsNullOrWhiteSpace(str);
     }
@@ -68,10 +85,11 @@ public static class AbpStringExtensions
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
     public static string Left(this string str, int len)
     {
-        Check.NotNull(str, nameof(str));
+        Checker.NotNull(str, nameof(str));
 
         if (str.Length < len)
         {
+            return str;
             throw new ArgumentException("len argument can not be bigger than given string's length!");
         }
 
@@ -90,11 +108,11 @@ public static class AbpStringExtensions
     /// Gets index of nth occurrence of a char in a string.
     /// </summary>
     /// <param name="str">source string to be searched</param>
-    /// <param name="c">Char to search in <paramref name="str"/></param>
+    /// <param name="c">Char to search in <see cref="str"/></param>
     /// <param name="n">Count of the occurrence</param>
     public static int NthIndexOf(this string str, char c, int n)
     {
-        Check.NotNull(str, nameof(str));
+        Checker.NotNull(str, nameof(str));
 
         var count = 0;
         for (var i = 0; i < str.Length; i++)
@@ -104,7 +122,7 @@ public static class AbpStringExtensions
                 continue;
             }
 
-            if ((++count) == n)
+            if (++count == n)
             {
                 return i;
             }
@@ -119,7 +137,6 @@ public static class AbpStringExtensions
     /// <param name="str">The string.</param>
     /// <param name="postFixes">one or more postfix.</param>
     /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
-    [ContractAnnotation("null <= str:null")]
     public static string RemovePostFix(this string str, params string[] postFixes)
     {
         return str.RemovePostFix(StringComparison.Ordinal, postFixes);
@@ -132,12 +149,11 @@ public static class AbpStringExtensions
     /// <param name="comparisonType">String comparison type</param>
     /// <param name="postFixes">one or more postfix.</param>
     /// <returns>Modified string or the same string if it has not any of given postfixes</returns>
-    [ContractAnnotation("null <= str:null")]
     public static string RemovePostFix(this string str, StringComparison comparisonType, params string[] postFixes)
     {
         if (str.IsNullOrEmpty())
         {
-            return str;
+            return null;
         }
 
         if (postFixes.IsNullOrEmpty())
@@ -162,7 +178,6 @@ public static class AbpStringExtensions
     /// <param name="str">The string.</param>
     /// <param name="preFixes">one or more prefix.</param>
     /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
-    [ContractAnnotation("null <= str:null")]
     public static string RemovePreFix(this string str, params string[] preFixes)
     {
         return str.RemovePreFix(StringComparison.Ordinal, preFixes);
@@ -175,12 +190,11 @@ public static class AbpStringExtensions
     /// <param name="comparisonType">String comparison type</param>
     /// <param name="preFixes">one or more prefix.</param>
     /// <returns>Modified string or the same string if it has not any of given prefixes</returns>
-    [ContractAnnotation("null <= str:null")]
     public static string RemovePreFix(this string str, StringComparison comparisonType, params string[] preFixes)
     {
         if (str.IsNullOrEmpty())
         {
-            return str;
+            return null;
         }
 
         if (preFixes.IsNullOrEmpty())
@@ -199,9 +213,10 @@ public static class AbpStringExtensions
         return str;
     }
 
-    public static string ReplaceFirst(this string str, string search, string replace, StringComparison comparisonType = StringComparison.Ordinal)
+    public static string ReplaceFirst(this string str, string search, string replace,
+        StringComparison comparisonType = StringComparison.Ordinal)
     {
-        Check.NotNull(str, nameof(str));
+        Checker.NotNull(str, nameof(str));
 
         var pos = str.IndexOf(search, comparisonType);
         if (pos < 0)
@@ -209,22 +224,7 @@ public static class AbpStringExtensions
             return str;
         }
 
-        var searchLength = search.Length;
-        var replaceLength = replace.Length;
-        var newLength = str.Length - searchLength + replaceLength;
-
-        Span<char> buffer = newLength <= 1024 ? stackalloc char[newLength] : new char[newLength];
-
-        // Copy the part of the original string before the search term
-        str.AsSpan(0, pos).CopyTo(buffer);
-
-        // Copy the replacement text
-        replace.AsSpan().CopyTo(buffer.Slice(pos));
-
-        // Copy the remainder of the original string
-        str.AsSpan(pos + searchLength).CopyTo(buffer.Slice(pos + replaceLength));
-
-        return buffer.ToString();
+        return str.Substring(0, pos) + replace + str.Substring(pos + search.Length);
     }
 
     /// <summary>
@@ -234,7 +234,7 @@ public static class AbpStringExtensions
     /// <exception cref="ArgumentException">Thrown if <paramref name="len"/> is bigger that string's length</exception>
     public static string Right(this string str, int len)
     {
-        Check.NotNull(str, nameof(str));
+        Checker.NotNull(str, nameof(str));
 
         if (str.Length < len)
         {
@@ -281,10 +281,8 @@ public static class AbpStringExtensions
     /// </summary>
     /// <param name="str">String to convert</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
-    /// <param name="handleAbbreviations">set true to if you want to convert 'XYZ' to 'xyz'.</param>
     /// <returns>camelCase of the string</returns>
-    [ContractAnnotation("null <= str:null")]
-    public static string ToCamelCase(this string str, bool useCurrentCulture = false, bool handleAbbreviations = false)
+    public static string ToCamelCase(this string str, bool useCurrentCulture = false)
     {
         if (string.IsNullOrWhiteSpace(str))
         {
@@ -296,31 +294,34 @@ public static class AbpStringExtensions
             return useCurrentCulture ? str.ToLower() : str.ToLowerInvariant();
         }
 
-        if (handleAbbreviations && IsAllUpperCase(str))
-        {
-            return useCurrentCulture ? str.ToLower() : str.ToLowerInvariant();
-        }
-
         return (useCurrentCulture ? char.ToLower(str[0]) : char.ToLowerInvariant(str[0])) + str.Substring(1);
     }
 
     /// <summary>
-    /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
-    /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
+    /// Converts string to enum value.
     /// </summary>
-    /// <param name="str">String to convert.</param>
-    /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
-    [ContractAnnotation("null <= str:null")]
-    public static string ToSentenceCase(this string str, bool useCurrentCulture = false)
+    /// <typeparam name="T">Type of enum</typeparam>
+    /// <param name="value">String value to convert</param>
+    /// <returns>Returns enum object</returns>
+    public static T ToEnum<T>(this string value)
+        where T : struct
     {
-        if (string.IsNullOrWhiteSpace(str))
-        {
-            return str;
-        }
+        Checker.NotNull(value, nameof(value));
+        return (T)Enum.Parse(typeof(T), value);
+    }
 
-        return useCurrentCulture
-            ? Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1]))
-            : Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLowerInvariant(m.Value[1]));
+    /// <summary>
+    /// Converts string to enum value.
+    /// </summary>
+    /// <typeparam name="T">Type of enum</typeparam>
+    /// <param name="value">String value to convert</param>
+    /// <param name="ignoreCase">Ignore case</param>
+    /// <returns>Returns enum object</returns>
+    public static T ToEnum<T>(this string value, bool ignoreCase)
+        where T : struct
+    {
+        Checker.NotNull(value, nameof(value));
+        return (T)Enum.Parse(typeof(T), value, ignoreCase);
     }
 
     /// <summary>
@@ -328,7 +329,6 @@ public static class AbpStringExtensions
     /// </summary>
     /// <param name="str">String to convert.</param>
     /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
-    [ContractAnnotation("null <= str:null")]
     public static string ToKebabCase(this string str, bool useCurrentCulture = false)
     {
         if (string.IsNullOrWhiteSpace(str))
@@ -341,6 +341,62 @@ public static class AbpStringExtensions
         return useCurrentCulture
             ? Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLower(m.Value[1]))
             : Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + "-" + char.ToLowerInvariant(m.Value[1]));
+    }
+
+    public static string ToMd5(this string str)
+    {
+        using (var md5 = MD5.Create())
+        {
+            var inputBytes = Encoding.UTF8.GetBytes(str);
+            var hashBytes = md5.ComputeHash(inputBytes);
+
+            var sb = new StringBuilder();
+            foreach (var hashByte in hashBytes)
+            {
+                sb.Append(hashByte.ToString("X2"));
+            }
+
+            return sb.ToString();
+        }
+    }
+
+    /// <summary>
+    /// Converts camelCase string to PascalCase string.
+    /// </summary>
+    /// <param name="str">String to convert</param>
+    /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
+    /// <returns>PascalCase of the string</returns>
+    public static string ToPascalCase(this string str, bool useCurrentCulture = false)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return str;
+        }
+
+        if (str.Length == 1)
+        {
+            return useCurrentCulture ? str.ToUpper() : str.ToUpperInvariant();
+        }
+
+        return (useCurrentCulture ? char.ToUpper(str[0]) : char.ToUpperInvariant(str[0])) + str.Substring(1);
+    }
+
+    /// <summary>
+    /// Converts given PascalCase/camelCase string to sentence (by splitting words by space).
+    /// Example: "ThisIsSampleSentence" is converted to "This is a sample sentence".
+    /// </summary>
+    /// <param name="str">String to convert.</param>
+    /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
+    public static string ToSentenceCase(this string str, bool useCurrentCulture = false)
+    {
+        if (string.IsNullOrWhiteSpace(str))
+        {
+            return str;
+        }
+
+        return useCurrentCulture
+            ? Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLower(m.Value[1]))
+            : Regex.Replace(str, "[a-z][A-Z]", m => m.Value[0] + " " + char.ToLowerInvariant(m.Value[1]));
     }
 
     /// <summary>
@@ -377,11 +433,11 @@ public static class AbpStringExtensions
                 case UnicodeCategory.TitlecaseLetter:
                     if (previousCategory == UnicodeCategory.SpaceSeparator ||
                         previousCategory == UnicodeCategory.LowercaseLetter ||
-                        previousCategory != UnicodeCategory.DecimalDigitNumber &&
-                        previousCategory != null &&
-                        currentIndex > 0 &&
-                        currentIndex + 1 < str.Length &&
-                        char.IsLower(str[currentIndex + 1]))
+                        (previousCategory != UnicodeCategory.DecimalDigitNumber &&
+                         previousCategory != null &&
+                         currentIndex > 0 &&
+                         currentIndex + 1 < str.Length &&
+                         char.IsLower(str[currentIndex + 1])))
                     {
                         builder.Append('_');
                     }
@@ -395,6 +451,7 @@ public static class AbpStringExtensions
                     {
                         builder.Append('_');
                     }
+
                     break;
 
                 default:
@@ -402,6 +459,7 @@ public static class AbpStringExtensions
                     {
                         previousCategory = UnicodeCategory.SpaceSeparator;
                     }
+
                     continue;
             }
 
@@ -413,75 +471,9 @@ public static class AbpStringExtensions
     }
 
     /// <summary>
-    /// Converts string to enum value.
-    /// </summary>
-    /// <typeparam name="T">Type of enum</typeparam>
-    /// <param name="value">String value to convert</param>
-    /// <returns>Returns enum object</returns>
-    public static T ToEnum<T>(this string value)
-        where T : struct
-    {
-        Check.NotNull(value, nameof(value));
-        return (T)Enum.Parse(typeof(T), value);
-    }
-
-    /// <summary>
-    /// Converts string to enum value.
-    /// </summary>
-    /// <typeparam name="T">Type of enum</typeparam>
-    /// <param name="value">String value to convert</param>
-    /// <param name="ignoreCase">Ignore case</param>
-    /// <returns>Returns enum object</returns>
-    public static T ToEnum<T>(this string value, bool ignoreCase)
-        where T : struct
-    {
-        Check.NotNull(value, nameof(value));
-        return (T)Enum.Parse(typeof(T), value, ignoreCase);
-    }
-
-    public static string ToMd5(this string str)
-    {
-        using (var md5 = MD5.Create())
-        {
-            var inputBytes = Encoding.UTF8.GetBytes(str);
-            var hashBytes = md5.ComputeHash(inputBytes);
-
-            var sb = new StringBuilder();
-            foreach (var hashByte in hashBytes)
-            {
-                sb.Append(hashByte.ToString("X2"));
-            }
-
-            return sb.ToString();
-        }
-    }
-
-    /// <summary>
-    /// Converts camelCase string to PascalCase string.
-    /// </summary>
-    /// <param name="str">String to convert</param>
-    /// <param name="useCurrentCulture">set true to use current culture. Otherwise, invariant culture will be used.</param>
-    /// <returns>PascalCase of the string</returns>
-    [ContractAnnotation("null <= str:null")]
-    public static string ToPascalCase(this string str, bool useCurrentCulture = false)
-    {
-        if (string.IsNullOrWhiteSpace(str))
-        {
-            return str;
-        }
-
-        if (str.Length == 1)
-        {
-            return useCurrentCulture ? str.ToUpper() : str.ToUpperInvariant();
-        }
-
-        return (useCurrentCulture ? char.ToUpper(str[0]) : char.ToUpperInvariant(str[0])) + str.Substring(1);
-    }
-
-    /// <summary>
     /// Gets a substring of a string from beginning of the string if it exceeds maximum length.
     /// </summary>
-    [ContractAnnotation("null <= str:null")]
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     public static string Truncate(this string str, int maxLength)
     {
         if (str == null)
@@ -500,7 +492,7 @@ public static class AbpStringExtensions
     /// <summary>
     /// Gets a substring of a string from Ending of the string if it exceeds maximum length.
     /// </summary>
-    [ContractAnnotation("null <= str:null")]
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
     public static string TruncateFromBeginning(this string str, int maxLength)
     {
         if (str == null)
@@ -533,7 +525,6 @@ public static class AbpStringExtensions
     /// Returning string can not be longer than maxLength.
     /// </summary>
     /// <exception cref="ArgumentNullException">Thrown if <paramref name="str"/> is null</exception>
-    [ContractAnnotation("null <= str:null")]
     public static string TruncateWithPostfix(this string str, int maxLength, string postfix)
     {
         if (str == null)
@@ -558,36 +549,272 @@ public static class AbpStringExtensions
 
         return str.Left(maxLength - postfix.Length) + postfix;
     }
+}
 
+public static partial class NiuXStringExtensions
+{
     /// <summary>
-    /// Converts given string to a byte array using <see cref="Encoding.UTF8"/> encoding.
+    /// 截取字符串s1最多前maxLen个字符
     /// </summary>
-    public static byte[] GetBytes(this string str)
+    /// <param name="s1"></param>
+    /// <param name="maxLength"></param>
+    /// <returns></returns>
+    public static string Cut(this string? s1, int maxLength)
     {
-        return str.GetBytes(Encoding.UTF8);
-    }
-
-    /// <summary>
-    /// Converts given string to a byte array using the given <paramref name="encoding"/>
-    /// </summary>
-    public static byte[] GetBytes([NotNull] this string str, [NotNull] Encoding encoding)
-    {
-        Check.NotNull(str, nameof(str));
-        Check.NotNull(encoding, nameof(encoding));
-
-        return encoding.GetBytes(str);
-    }
-
-    private static bool IsAllUpperCase(string input)
-    {
-        for (int i = 0; i < input.Length; i++)
+        if (s1 == null)
         {
-            if (Char.IsLetter(input[i]) && !Char.IsUpper(input[i]))
+            return string.Empty;
+        }
+
+        // 不能超过字符串的最大大小
+        maxLength = s1.Length <= maxLength ? s1.Length : maxLength;
+        return s1.Substring(0, maxLength);
+    }
+
+    public static string GetCamelCaseFirstWord(this string str)
+    {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
+        if (str.Length == 1)
+        {
+            return str;
+        }
+
+        var res = Regex.Split(str, @"(?=\p{Lu}\p{Ll})|(?<=\p{Ll})(?=\p{Lu})");
+
+        if (res.Length < 1)
+        {
+            return str;
+        }
+
+        return res[0];
+    }
+
+    public static string GetPascalCaseFirstWord(this string str)
+    {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
+        if (str.Length == 1)
+        {
+            return str;
+        }
+
+        var res = Regex.Split(str, @"(?=\p{Lu}\p{Ll})|(?<=\p{Ll})(?=\p{Lu})");
+
+        if (res.Length < 2)
+        {
+            return str;
+        }
+
+        return res[1];
+    }
+
+    public static string GetPascalOrCamelCaseFirstWord(this string str)
+    {
+        if (str == null)
+        {
+            throw new ArgumentNullException(nameof(str));
+        }
+
+        if (str.Length <= 1)
+        {
+            return str;
+        }
+
+        if (str[0] >= 65 && str[0] <= 90)
+        {
+            return GetPascalCaseFirstWord(str);
+        }
+
+        return GetCamelCaseFirstWord(str);
+    }
+
+    /// <summary>
+    /// 是否相等
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    public static bool IsEndsWith(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return str.EndsWith(value, comparisonType);
+    }
+
+    /// <summary>
+    /// 是否相等
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    public static bool IsEqual(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return string.Equals(str, value, comparisonType);
+    }
+
+    public static bool IsContains(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return str.IndexOf(value, comparisonType) >= 0;
+    }
+
+    public static bool IsNotContains(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return !str.IsContains(value, comparisonType);
+    }
+
+    /// <summary>
+    /// 是否匹配
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="pattern"></param>
+    /// <returns></returns>
+    public static bool IsMatch(this string str, string pattern)
+    {
+        return str != null && Regex.IsMatch(str, pattern);
+    }
+
+    /// <summary>
+    /// 是否相等
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    public static bool IsNotEndsWith(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return !IsEndsWith(str, value, comparisonType);
+    }
+
+    /// <summary>
+    /// 是否相等
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    public static bool IsNotEqual(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return !IsEqual(str, value, comparisonType);
+    }
+
+    /// <summary>
+    /// IsNotNullOrEmpty
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    public static bool IsNotNullOrEmpty(this string str)
+    {
+        return !str.IsNullOrEmpty();
+    }
+
+    /// <summary>
+    /// IsNotNullOrWhiteSpace
+    /// </summary>
+    /// <param name="str"></param>
+    /// <returns></returns>
+    public static bool IsNotNullOrWhiteSpace(this string str)
+    {
+        return !str.IsNullOrWhiteSpace();
+    }
+
+    /// <summary>
+    /// 是否相等
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    public static bool IsNotStartsWith(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return !IsStartsWith(str, value, comparisonType);
+    }
+
+    /// <summary>
+    /// 是否相等
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="value"></param>
+    /// <param name="comparisonType"></param>
+    /// <returns></returns>
+    public static bool IsStartsWith(this string str, string value,
+        StringComparison comparisonType = StringComparison.OrdinalIgnoreCase)
+    {
+        return str.StartsWith(value, comparisonType);
+    }
+
+    /// <summary>
+    /// 匹配的字符
+    /// </summary>
+    /// <param name="str"></param>
+    /// <param name="pattern"></param>
+    /// <returns></returns>
+    public static string Match(this string str, string pattern)
+    {
+        return str == null ? "" : Regex.Match(str, pattern).Value;
+    }
+
+    /// <summary>
+    /// 转半角(DBC case)
+    /// </summary>
+    /// <returns>半角字符串</returns>
+    public static string ToDbc(this string str)
+    {
+        var c = str.ToCharArray();
+
+        for (var i = 0; i < c.Length; i++)
+        {
+            if (c[i] == 12288)
             {
-                return false;
+                c[i] = (char)32;
+                continue;
+            }
+
+            if (c[i] > 65280 && c[i] < 65375)
+            {
+                c[i] = (char)(c[i] - 65248);
             }
         }
 
-        return true;
+        return new string(c);
+    }
+
+    /// <summary>
+    /// 转全角(SBC case)
+    /// </summary>
+    /// <param name="str">任意字符串</param>
+    /// <returns>全角字符串</returns>
+    public static string ToSbc(this string str)
+    {
+        var c = str.ToCharArray();
+
+        for (var i = 0; i < c.Length; i++)
+        {
+            if (c[i] == 32)
+            {
+                c[i] = (char)12288;
+                continue;
+            }
+
+            if (c[i] < 127)
+            {
+                c[i] = (char)(c[i] + 65248);
+            }
+        }
+
+        return new string(c);
     }
 }

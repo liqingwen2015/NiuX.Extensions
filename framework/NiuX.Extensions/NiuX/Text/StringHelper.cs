@@ -1,8 +1,11 @@
 ﻿using System.Text;
 
-namespace Volo.Abp.Text;
+namespace NiuX.Text;
 
-public class StringHelper
+/// <summary>
+/// String Helper
+/// </summary>
+public static class StringHelper
 {
     /// <summary>
     /// Converts a byte[] to string without BOM (byte order mark).
@@ -28,9 +31,7 @@ public class StringHelper
         {
             return encoding.GetString(bytes, 3, bytes.Length - 3);
         }
-        else
-        {
-            return encoding.GetString(bytes);
-        }
+
+        return encoding.GetString(bytes);
     }
 }

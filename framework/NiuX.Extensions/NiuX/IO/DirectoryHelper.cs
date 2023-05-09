@@ -1,14 +1,17 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using JetBrains.Annotations;
 
-namespace Volo.Abp.IO;
+namespace NiuX.IO;
 
 /// <summary>
 /// A helper class for Directory operations.
 /// </summary>
 public static class DirectoryHelper
 {
+    /// <summary>
+    /// Creates if not exists.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
     public static void CreateIfNotExists(string directory)
     {
         if (!Directory.Exists(directory))
@@ -17,6 +20,10 @@ public static class DirectoryHelper
         }
     }
 
+    /// <summary>
+    /// Deletes if exists.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
     public static void DeleteIfExists(string directory)
     {
         if (Directory.Exists(directory))
@@ -25,6 +32,11 @@ public static class DirectoryHelper
         }
     }
 
+    /// <summary>
+    /// Deletes if exists.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
+    /// <param name="recursive">if set to <c>true</c> [recursive].</param>
     public static void DeleteIfExists(string directory, bool recursive)
     {
         if (Directory.Exists(directory))
@@ -33,6 +45,10 @@ public static class DirectoryHelper
         }
     }
 
+    /// <summary>
+    /// Creates if not exists.
+    /// </summary>
+    /// <param name="directory">The directory.</param>
     public static void CreateIfNotExists(DirectoryInfo directory)
     {
         if (!directory.Exists)
@@ -41,10 +57,18 @@ public static class DirectoryHelper
         }
     }
 
+    /// <summary>
+    /// Determines whether [is sub directory of] [the specified parent directory path].
+    /// </summary>
+    /// <param name="parentDirectoryPath">The parent directory path.</param>
+    /// <param name="childDirectoryPath">The child directory path.</param>
+    /// <returns>
+    ///   <c>true</c> if [is sub directory of] [the specified parent directory path]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsSubDirectoryOf([NotNull] string parentDirectoryPath, [NotNull] string childDirectoryPath)
     {
-        Check.NotNull(parentDirectoryPath, nameof(parentDirectoryPath));
-        Check.NotNull(childDirectoryPath, nameof(childDirectoryPath));
+        Checker.NotNull(parentDirectoryPath, nameof(parentDirectoryPath));
+        Checker.NotNull(childDirectoryPath, nameof(childDirectoryPath));
 
         return IsSubDirectoryOf(
             new DirectoryInfo(parentDirectoryPath),
@@ -52,11 +76,19 @@ public static class DirectoryHelper
         );
     }
 
+    /// <summary>
+    /// Determines whether [is sub directory of] [the specified parent directory].
+    /// </summary>
+    /// <param name="parentDirectory">The parent directory.</param>
+    /// <param name="childDirectory">The child directory.</param>
+    /// <returns>
+    ///   <c>true</c> if [is sub directory of] [the specified parent directory]; otherwise, <c>false</c>.
+    /// </returns>
     public static bool IsSubDirectoryOf([NotNull] DirectoryInfo parentDirectory,
         [NotNull] DirectoryInfo childDirectory)
     {
-        Check.NotNull(parentDirectory, nameof(parentDirectory));
-        Check.NotNull(childDirectory, nameof(childDirectory));
+        Checker.NotNull(parentDirectory, nameof(parentDirectory));
+        Checker.NotNull(childDirectory, nameof(childDirectory));
 
         if (parentDirectory.FullName == childDirectory.FullName)
         {
@@ -70,19 +102,5 @@ public static class DirectoryHelper
         }
 
         return IsSubDirectoryOf(parentDirectory, parentOfChild);
-    }
-
-    public static IDisposable ChangeCurrentDirectory(string targetDirectory)
-    {
-        var currentDirectory = Directory.GetCurrentDirectory();
-
-        if (currentDirectory.Equals(targetDirectory, StringComparison.OrdinalIgnoreCase))
-        {
-            return NullDisposable.Instance;
-        }
-
-        Directory.SetCurrentDirectory(targetDirectory);
-
-        return new DisposeAction<string>(Directory.SetCurrentDirectory, currentDirectory);
     }
 }

@@ -5,13 +5,27 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Volo.Abp;
+namespace NiuX;
 
+/// <summary>
+/// Object Helper
+/// </summary>
 public static class ObjectHelper
 {
-    private static readonly ConcurrentDictionary<string, PropertyInfo> CachedObjectProperties =
-        new ConcurrentDictionary<string, PropertyInfo>();
+    /// <summary>
+    /// The cached object properties
+    /// </summary>
+    private readonly static ConcurrentDictionary<string, PropertyInfo> CachedObjectProperties = new();
 
+    /// <summary>
+    /// Tries the set property.
+    /// </summary>
+    /// <typeparam name="TObject">The type of the object.</typeparam>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <param name="obj">The object.</param>
+    /// <param name="propertySelector">The property selector.</param>
+    /// <param name="valueFactory">The value factory.</param>
+    /// <param name="ignoreAttributeTypes">The ignore attribute types.</param>
     public static void TrySetProperty<TObject, TValue>(
         TObject obj,
         Expression<Func<TObject, TValue>> propertySelector,
@@ -21,6 +35,15 @@ public static class ObjectHelper
         TrySetProperty(obj, propertySelector, x => valueFactory(), ignoreAttributeTypes);
     }
 
+    /// <summary>
+    /// Tries the set property.
+    /// </summary>
+    /// <typeparam name="TObject">The type of the object.</typeparam>
+    /// <typeparam name="TValue">The type of the value.</typeparam>
+    /// <param name="obj">The object.</param>
+    /// <param name="propertySelector">The property selector.</param>
+    /// <param name="valueFactory">The value factory.</param>
+    /// <param name="ignoreAttributeTypes">The ignore attribute types.</param>
     public static void TrySetProperty<TObject, TValue>(
         TObject obj,
         Expression<Func<TObject, TValue>> propertySelector,

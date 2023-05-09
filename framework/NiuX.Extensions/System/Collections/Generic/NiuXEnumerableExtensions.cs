@@ -1,11 +1,13 @@
 ﻿using System.Linq;
 
+// ReSharper disable CheckNamespace
+
 namespace System.Collections.Generic;
 
-/// <summary> 
+/// <summary>
 /// Extension methods for <see cref="IEnumerable{T}"/>.
 /// </summary>
-public static class AbpEnumerableExtensions
+public static class NiuXEnumerableExtensions
 {
     /// <summary>
     /// Concatenates the members of a constructed <see cref="IEnumerable{T}"/> collection of type System.String, using the specified separator between each member.
@@ -14,7 +16,7 @@ public static class AbpEnumerableExtensions
     /// <param name="source">A collection that contains the strings to concatenate.</param>
     /// <param name="separator">The string to use as a separator. separator is included in the returned string only if values has more than one element.</param>
     /// <returns>A string that consists of the members of values delimited by the separator string. If values has no members, the method returns System.String.Empty.</returns>
-    public static string JoinAsString(this IEnumerable<string> source, string separator)
+    public static string JoinAsString(this IEnumerable<string> source, string separator = "")
     {
         return string.Join(separator, source);
     }
@@ -58,5 +60,19 @@ public static class AbpEnumerableExtensions
         return condition
             ? source.Where(predicate)
             : source;
+    }
+
+    /// <summary>
+    /// 是否子集
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source"></param>
+    /// <param name="other"></param>
+    /// <returns></returns>
+    public static bool IsSubSetOf<T>(this IEnumerable<T> source, IEnumerable<T> other)
+    {
+        // 两种方式，未测试性能
+        //return other.Except(source).Any();
+        return source.All(other.Contains);
     }
 }

@@ -5,7 +5,7 @@ namespace System.Reflection;
 /// <summary>
 /// Extensions to <see cref="MemberInfo"/>.
 /// </summary>
-public static class AbpMemberInfoExtensions
+public static class NiuXMemberInfoExtensions
 {
     /// <summary>
     /// Gets a single attribute for a member.
@@ -30,7 +30,6 @@ public static class AbpMemberInfoExtensions
 
         return default;
     }
-
 
     public static TAttribute GetSingleAttributeOfTypeOrBaseTypesOrNull<TAttribute>(this Type type, bool inherit = true)
         where TAttribute : Attribute

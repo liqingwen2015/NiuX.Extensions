@@ -1,18 +1,17 @@
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
-using Volo.Abp;
+using NiuX;
 
 namespace System.Collections.Generic;
 
 /// <summary>
 /// Extension methods for Collections.
 /// </summary>
-public static class AbpCollectionExtensions
+public static class NiuXCollectionExtensions
 {
     /// <summary>
     /// Checks whatever given collection object is null or has no item.
     /// </summary>
-    [ContractAnnotation("source:null => true")]
     public static bool IsNullOrEmpty<T>([CanBeNull] this ICollection<T> source)
     {
         return source == null || source.Count <= 0;
@@ -27,7 +26,7 @@ public static class AbpCollectionExtensions
     /// <returns>Returns True if added, returns False if not.</returns>
     public static bool AddIfNotContains<T>([NotNull] this ICollection<T> source, T item)
     {
-        Check.NotNull(source, nameof(source));
+        Checker.NotNull(source, nameof(source));
 
         if (source.Contains(item))
         {
@@ -47,7 +46,7 @@ public static class AbpCollectionExtensions
     /// <returns>Returns the added items.</returns>
     public static IEnumerable<T> AddIfNotContains<T>([NotNull] this ICollection<T> source, IEnumerable<T> items)
     {
-        Check.NotNull(source, nameof(source));
+        //Checker.NotNull(source, nameof(source));
 
         var addedItems = new List<T>();
 
@@ -73,11 +72,12 @@ public static class AbpCollectionExtensions
     /// <param name="itemFactory">A factory that returns the item</param>
     /// <typeparam name="T">Type of the items in the collection</typeparam>
     /// <returns>Returns True if added, returns False if not.</returns>
-    public static bool AddIfNotContains<T>([NotNull] this ICollection<T> source, [NotNull] Func<T, bool> predicate, [NotNull] Func<T> itemFactory)
+    public static bool AddIfNotContains<T>([NotNull] this ICollection<T> source, [NotNull] Func<T, bool> predicate,
+        [NotNull] Func<T> itemFactory)
     {
-        Check.NotNull(source, nameof(source));
-        Check.NotNull(predicate, nameof(predicate));
-        Check.NotNull(itemFactory, nameof(itemFactory));
+        Checker.NotNull(source, nameof(source));
+        Checker.NotNull(predicate, nameof(predicate));
+        Checker.NotNull(itemFactory, nameof(itemFactory));
 
         if (source.Any(predicate))
         {
@@ -108,7 +108,7 @@ public static class AbpCollectionExtensions
     }
 
     /// <summary>
-    /// Removes all items from the collection.
+    /// Removes all items from the collection those satisfy the given <paramref name="predicate"/>.
     /// </summary>
     /// <typeparam name="T">Type of the items in the collection</typeparam>
     /// <param name="source">The collection</param>

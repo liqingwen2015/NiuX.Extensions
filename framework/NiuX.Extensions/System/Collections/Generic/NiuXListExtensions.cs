@@ -1,14 +1,21 @@
 ﻿using System.Linq;
 using JetBrains.Annotations;
-using Volo.Abp;
+using NiuX;
 
 namespace System.Collections.Generic;
 
 /// <summary>
-/// Extension methods for <see cref="IList{T}"/>.
+/// Extension methods for <see cref="IList{T}" />.
 /// </summary>
-public static class AbpListExtensions
+public static class NiuXListExtensions
 {
+    /// <summary>
+    /// Inserts the range.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="items">The items.</param>
     public static void InsertRange<T>(this IList<T> source, int index, IEnumerable<T> items)
     {
         foreach (var item in items)
@@ -17,6 +24,13 @@ public static class AbpListExtensions
         }
     }
 
+    /// <summary>
+    /// Finds the index.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <returns></returns>
     public static int FindIndex<T>(this IList<T> source, Predicate<T> selector)
     {
         for (var i = 0; i < source.Count; ++i)
@@ -30,16 +44,35 @@ public static class AbpListExtensions
         return -1;
     }
 
+    /// <summary>
+    /// Adds the first.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="item">The item.</param>
     public static void AddFirst<T>(this IList<T> source, T item)
     {
         source.Insert(0, item);
     }
 
+    /// <summary>
+    /// Adds the last.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="item">The item.</param>
     public static void AddLast<T>(this IList<T> source, T item)
     {
         source.Insert(source.Count, item);
     }
 
+    /// <summary>
+    /// Inserts the after.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="existingItem">The existing item.</param>
+    /// <param name="item">The item.</param>
     public static void InsertAfter<T>(this IList<T> source, T existingItem, T item)
     {
         var index = source.IndexOf(existingItem);
@@ -52,6 +85,13 @@ public static class AbpListExtensions
         source.Insert(index + 1, item);
     }
 
+    /// <summary>
+    /// Inserts the after.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="item">The item.</param>
     public static void InsertAfter<T>(this IList<T> source, Predicate<T> selector, T item)
     {
         var index = source.FindIndex(selector);
@@ -64,6 +104,13 @@ public static class AbpListExtensions
         source.Insert(index + 1, item);
     }
 
+    /// <summary>
+    /// Inserts the before.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="existingItem">The existing item.</param>
+    /// <param name="item">The item.</param>
     public static void InsertBefore<T>(this IList<T> source, T existingItem, T item)
     {
         var index = source.IndexOf(existingItem);
@@ -76,6 +123,13 @@ public static class AbpListExtensions
         source.Insert(index, item);
     }
 
+    /// <summary>
+    /// Inserts the before.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="item">The item.</param>
     public static void InsertBefore<T>(this IList<T> source, Predicate<T> selector, T item)
     {
         var index = source.FindIndex(selector);
@@ -88,9 +142,16 @@ public static class AbpListExtensions
         source.Insert(index, item);
     }
 
+    /// <summary>
+    /// Replaces the while.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="item">The item.</param>
     public static void ReplaceWhile<T>(this IList<T> source, Predicate<T> selector, T item)
     {
-        for (int i = 0; i < source.Count; i++)
+        for (var i = 0; i < source.Count; i++)
         {
             if (selector(source[i]))
             {
@@ -99,9 +160,16 @@ public static class AbpListExtensions
         }
     }
 
+    /// <summary>
+    /// Replaces the while.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="itemFactory">The item factory.</param>
     public static void ReplaceWhile<T>(this IList<T> source, Predicate<T> selector, Func<T, T> itemFactory)
     {
-        for (int i = 0; i < source.Count; i++)
+        for (var i = 0; i < source.Count; i++)
         {
             var item = source[i];
             if (selector(item))
@@ -111,9 +179,16 @@ public static class AbpListExtensions
         }
     }
 
+    /// <summary>
+    /// Replaces the one.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="item">The item.</param>
     public static void ReplaceOne<T>(this IList<T> source, Predicate<T> selector, T item)
     {
-        for (int i = 0; i < source.Count; i++)
+        for (var i = 0; i < source.Count; i++)
         {
             if (selector(source[i]))
             {
@@ -123,9 +198,16 @@ public static class AbpListExtensions
         }
     }
 
+    /// <summary>
+    /// Replaces the one.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="itemFactory">The item factory.</param>
     public static void ReplaceOne<T>(this IList<T> source, Predicate<T> selector, Func<T, T> itemFactory)
     {
-        for (int i = 0; i < source.Count; i++)
+        for (var i = 0; i < source.Count; i++)
         {
             var item = source[i];
             if (selector(item))
@@ -136,9 +218,16 @@ public static class AbpListExtensions
         }
     }
 
+    /// <summary>
+    /// Replaces the one.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="item">The item.</param>
+    /// <param name="replaceWith">The replace with.</param>
     public static void ReplaceOne<T>(this IList<T> source, T item, T replaceWith)
     {
-        for (int i = 0; i < source.Count; i++)
+        for (var i = 0; i < source.Count; i++)
         {
             if (Comparer<T>.Default.Compare(source[i], item) == 0)
             {
@@ -148,6 +237,14 @@ public static class AbpListExtensions
         }
     }
 
+    /// <summary>
+    /// Moves the item.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="targetIndex">Index of the target.</param>
+    /// <exception cref="System.IndexOutOfRangeException">targetIndex should be between 0 and " + (source.Count - 1)</exception>
     public static void MoveItem<T>(this List<T> source, Predicate<T> selector, int targetIndex)
     {
         if (!targetIndex.IsBetween(0, source.Count - 1))
@@ -166,10 +263,18 @@ public static class AbpListExtensions
         source.Insert(targetIndex, item);
     }
 
+    /// <summary>
+    /// Gets the or add.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="selector">The selector.</param>
+    /// <param name="factory">The factory.</param>
+    /// <returns></returns>
     [NotNull]
     public static T GetOrAdd<T>([NotNull] this IList<T> source, Func<T, bool> selector, Func<T> factory)
     {
-        Check.NotNull(source, nameof(source));
+        Checker.NotNull(source, nameof(source));
 
         var item = source.FirstOrDefault(selector);
 
@@ -188,7 +293,7 @@ public static class AbpListExtensions
     /// <typeparam name="T">The type of the members of values.</typeparam>
     /// <param name="source">A list of objects to sort</param>
     /// <param name="getDependencies">Function to resolve the dependencies</param>
-    /// <param name="comparer">Equality comparer for dependencies </param>
+    /// <param name="comparer">Equality comparer for dependencies</param>
     /// <returns>
     /// Returns a new list ordered by dependencies.
     /// If A depends on B, then B will come before than A in the resulting list.
@@ -214,13 +319,14 @@ public static class AbpListExtensions
     }
 
     /// <summary>
-    ///
+    /// Sorts the by dependencies visit.
     /// </summary>
     /// <typeparam name="T">The type of the members of values.</typeparam>
     /// <param name="item">Item to resolve</param>
     /// <param name="getDependencies">Function to resolve the dependencies</param>
     /// <param name="sorted">List with the sortet items</param>
     /// <param name="visited">Dictionary with the visited items</param>
+    /// <exception cref="System.ArgumentException">Cyclic dependency found! Item: " + item</exception>
     private static void SortByDependenciesVisit<T>(T item, Func<T, IEnumerable<T>> getDependencies, List<T> sorted,
         Dictionary<T, bool> visited)
     {
@@ -250,5 +356,32 @@ public static class AbpListExtensions
             visited[item] = false;
             sorted.Add(item);
         }
+    }
+
+    /// <summary>
+    /// 添加首个后返回
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="item">The item.</param>
+    /// <returns></returns>
+    public static List<T> AddFirstReturn<T>(this List<T> source, T item)
+    {
+        source.AddFirst(item);
+        return source;
+    }
+
+    /// <summary>
+    /// 插入后返回
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="source">The source.</param>
+    /// <param name="index">The index.</param>
+    /// <param name="item">The item.</param>
+    /// <returns></returns>
+    public static List<T> InsertReturn<T>(this List<T> source, int index, T item)
+    {
+        source.Insert(index, item);
+        return source;
     }
 }

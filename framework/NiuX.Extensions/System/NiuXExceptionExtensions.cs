@@ -1,12 +1,11 @@
 using System.Runtime.ExceptionServices;
 
-
 namespace System;
 
 /// <summary>
 /// Extension methods for <see cref="Exception"/> class.
 /// </summary>
-public static class AbpExceptionExtensions
+public static class NiuXExceptionExtensions
 {
     /// <summary>
     /// Uses <see cref="ExceptionDispatchInfo.Capture"/> method to re-throws exception
@@ -17,5 +16,4 @@ public static class AbpExceptionExtensions
     {
         ExceptionDispatchInfo.Capture(exception).Throw();
     }
-
 }
