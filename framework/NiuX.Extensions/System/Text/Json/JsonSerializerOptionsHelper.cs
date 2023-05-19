@@ -16,10 +16,8 @@ public static class JsonSerializerOptionsHelper
     /// <param name="addConverters">The add converters.</param>
     /// <returns></returns>
     public static JsonSerializerOptions Create(JsonSerializerOptions baseOptions, JsonConverter removeConverter,
-        params JsonConverter[] addConverters)
-    {
-        return Create(baseOptions, x => x == removeConverter, addConverters);
-    }
+        params JsonConverter[] addConverters) =>
+        Create(baseOptions, x => x == removeConverter, addConverters);
 
     /// <summary>
     /// Creates the specified base options.

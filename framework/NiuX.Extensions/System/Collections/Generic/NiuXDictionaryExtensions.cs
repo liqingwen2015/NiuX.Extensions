@@ -20,10 +20,9 @@ public static class NiuXDictionaryExtensions
     /// <returns>True if key does exists in the dictionary</returns>
     static internal bool TryGetValue<T>(this IDictionary<string, object> dictionary, string key, out T value)
     {
-        object valueObj;
-        if (dictionary.TryGetValue(key, out valueObj) && valueObj is T)
+        if (dictionary.TryGetValue(key, out var valueObj) && valueObj is T obj)
         {
-            value = (T)valueObj;
+            value = obj;
             return true;
         }
 

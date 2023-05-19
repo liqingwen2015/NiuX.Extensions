@@ -20,15 +20,9 @@ public static class JsonExtensions
     /// <param name="str">The string.</param>
     /// <returns></returns>
     //public static T? FromJson<T>(this string str) => JsonConvert.DeserializeObject<T>(str);
-    public static T? FromJson<T>(this string str)
-    {
-        return JsonSerializer.Deserialize<T>(str);
-    }
+    public static T? FromJson<T>(this string str) => JsonSerializer.Deserialize<T>(str);
 
-    public static object? FromJson(this string str, Type type)
-    {
-        return JsonSerializer.Deserialize(str, type);
-    }
+    public static object? FromJson(this string str, Type type) => JsonSerializer.Deserialize(str, type);
 
     /// <summary>
     /// 从 Json 反序列化
@@ -38,20 +32,14 @@ public static class JsonExtensions
     /// <param name="type">The type.</param>
     /// <returns></returns>
     //public static T? FromJson<T>(this string str, Type type) => (T?)JsonConvert.DeserializeObject(str, type);
-    public static T? FromJson<T>(this string str, Type type)
-    {
-        return (T?)JsonSerializer.Deserialize(str, type);
-    }
+    public static T? FromJson<T>(this string str, Type type) => (T)JsonSerializer.Deserialize(str, type);
 
     /// <summary>
     /// 序列化成 Json
     /// </summary>
     /// <param name="obj">The object.</param>
     /// <returns></returns>
-    public static string ToJson(this object obj)
-    {
-        return JsonSerializer.Serialize(obj, DefaultJsonSerializerOptions);
-    }
+    public static string ToJson(this object obj) => JsonSerializer.Serialize(obj, DefaultJsonSerializerOptions);
 
 
     /// <summary>
@@ -60,8 +48,5 @@ public static class JsonExtensions
     /// <param name="obj">The object.</param>
     /// <param name="options">The options.</param>
     /// <returns></returns>
-    public static string ToJson(this object obj, JsonSerializerOptions options)
-    {
-        return JsonSerializer.Serialize(obj, options);
-    }
+    public static string ToJson(this object obj, JsonSerializerOptions options) => JsonSerializer.Serialize(obj, options);
 }

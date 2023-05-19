@@ -23,10 +23,8 @@ public static class DictionaryExtensions
     /// <param name="keySelector">The key selector.</param>
     /// <returns></returns>
     public static Dictionary<TKey, TSource> ToDictionaryWithIgnoreCase<TSource, TKey>(this IEnumerable<TSource> source,
-        Func<TSource, TKey> keySelector) where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, DefaultIgnoreCaseComparer);
-    }
+        Func<TSource, TKey> keySelector) where TKey : notnull =>
+        source.ToDictionary(keySelector, DefaultIgnoreCaseComparer);
 
     /// <summary>
     /// Converts to dictionarywithignorecase.
@@ -40,10 +38,8 @@ public static class DictionaryExtensions
     /// <returns></returns>
     public static Dictionary<TKey, TElement> ToDictionaryWithIgnoreCase<TSource, TKey, TElement>(
         this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
-        where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, elementSelector, DefaultIgnoreCaseComparer);
-    }
+        where TKey : notnull =>
+        source.ToDictionary(keySelector, elementSelector, DefaultIgnoreCaseComparer);
 
     /// <summary>
     /// Converts to dictionarywithordinalignorecase.
@@ -54,10 +50,8 @@ public static class DictionaryExtensions
     /// <param name="keySelector">The key selector.</param>
     /// <returns></returns>
     public static Dictionary<TKey, TSource> ToDictionaryWithOrdinalIgnoreCase<TSource, TKey>(
-        this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, StringComparer.OrdinalIgnoreCase);
-    }
+        this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull =>
+        source.ToDictionary(keySelector, StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Converts to dictionarywithordinalignorecase.
@@ -72,9 +66,7 @@ public static class DictionaryExtensions
     public static Dictionary<TKey, TElement> ToDictionaryWithOrdinalIgnoreCase<TSource, TKey, TElement>(
         this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, elementSelector, StringComparer.OrdinalIgnoreCase);
-    }
+    => source.ToDictionary(keySelector, elementSelector, StringComparer.OrdinalIgnoreCase);
 
     /// <summary>
     /// Converts to dictionarywithcurrentcultureignorecase.
@@ -86,9 +78,7 @@ public static class DictionaryExtensions
     /// <returns></returns>
     public static Dictionary<TKey, TSource> ToDictionaryWithCurrentCultureIgnoreCase<TSource, TKey>(
         this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, StringComparer.CurrentCultureIgnoreCase);
-    }
+    => source.ToDictionary(keySelector, StringComparer.CurrentCultureIgnoreCase);
 
     /// <summary>
     /// Converts to dictionarywithcurrentcultureignorecase.
@@ -103,9 +93,7 @@ public static class DictionaryExtensions
     public static Dictionary<TKey, TElement> ToDictionaryWithCurrentCultureIgnoreCase<TSource, TKey, TElement>(
         this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, elementSelector, StringComparer.CurrentCultureIgnoreCase);
-    }
+    => source.ToDictionary(keySelector, elementSelector, StringComparer.CurrentCultureIgnoreCase);
 
     /// <summary>
     /// Converts to dictionarywithinvariantcultureignorecase.
@@ -117,9 +105,7 @@ public static class DictionaryExtensions
     /// <returns></returns>
     public static Dictionary<TKey, TSource> ToDictionaryWithInvariantCultureIgnoreCase<TSource, TKey>(
         this IEnumerable<TSource> source, Func<TSource, TKey> keySelector) where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, StringComparer.InvariantCultureIgnoreCase);
-    }
+    => source.ToDictionary(keySelector, StringComparer.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Converts to dictionarywithinvariantcultureignorecase.
@@ -134,9 +120,7 @@ public static class DictionaryExtensions
     public static Dictionary<TKey, TElement> ToDictionaryWithInvariantCultureIgnoreCase<TSource, TKey, TElement>(
         this IEnumerable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector)
         where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, elementSelector, StringComparer.InvariantCultureIgnoreCase);
-    }
+    => source.ToDictionary(keySelector, elementSelector, StringComparer.InvariantCultureIgnoreCase);
 
     /// <summary>
     /// Converts to dictionary.
@@ -149,9 +133,7 @@ public static class DictionaryExtensions
     /// <returns></returns>
     public static Dictionary<TKey, TSource> ToDictionary<TSource, TKey>(this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector, StringComparer stringComparer) where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, (IEqualityComparer<TKey>)stringComparer);
-    }
+    => source.ToDictionary(keySelector, (IEqualityComparer<TKey>)stringComparer);
 
     /// <summary>
     /// Converts to dictionary.
@@ -167,7 +149,5 @@ public static class DictionaryExtensions
     public static Dictionary<TKey, TElement> ToDictionary<TSource, TKey, TElement>(this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, StringComparer stringComparer)
         where TKey : notnull
-    {
-        return source.ToDictionary(keySelector, elementSelector, (IEqualityComparer<TKey>)stringComparer);
-    }
+    => source.ToDictionary(keySelector, elementSelector, (IEqualityComparer<TKey>)stringComparer);
 }
